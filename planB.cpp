@@ -4,27 +4,27 @@ using namespace std;
 typedef pair<int,float> Parint;
 
 // cria o grafo do mapa do metrô
-vector<vector<Parint>> realDist() {
-  vector<vector<Parint>> realStations(15); 
-
+vector<vector<pair<Parint, string>>> subway() {
+  vector<vector<pair<Parint, string>>> realStations(15); 
+// COMPLETAR COM CORES DAS LINHAS E COLOCAR CAMINHOS DE IDA E VOLTA
   // E1 -> E2
-  realStations[1].push_back({2, 10.0});
+  realStations[1].push_back({{2, 10.0}, "Azul"});
 
   // E2 -> E3, E9, E10
-  realStations[2].push_back({3, 8.5});
-  realStations[2].push_back({9, 10.0});
-  realStations[2].push_back({10, 3.5});
+  realStations[2].push_back({{3, 8.5}, "Azul"});
+  realStations[2].push_back({{9, 10.0}, "Amarela"});
+  realStations[2].push_back({{10, 3.5}, "Amarela"});
 
   // E3 -> E4, E9, E13
-  realStations[3].push_back({4, 6.3});
+  realStations[3].push_back({{4, 6.3}, });
   realStations[3].push_back({9, 9.4});
   realStations[3].push_back({13, 18.7});
 
-  // E4 -> E5, E8, E13, E14
+  // E4 -> E3, E5, E8, E13
+  realStations[4].push_back({3, 6.3});
   realStations[4].push_back({5, 13.0});
   realStations[4].push_back({8, 15.4});
   realStations[4].push_back({13, 12.8});
-  realStations[4].push_back({14, 1.1});
 
   // E5 -> E6, E7, E8
   realStations[5].push_back({6, 3.0});
@@ -47,11 +47,11 @@ vector<vector<Parint>> realDist() {
 
 
 // criar lista de adj com distâncias diretas entre as estações -> só vai pra frente
-vector<vector<Parint>> strDist() 
-{
+vector<vector<Parint>> strDist() {
     vector<vector<Parint>> stations(15); // setando com um tamanho a mais para dar match com o número das estações (inciando do 1)
     // stations[origem].push_back({destino, custo});
 
+    // distâncias para as estações E3
     stations[1].push_back({2, 10.0}); stations[2].push_back({1, 10.0});
     stations[1].push_back({3, 18.5}); stations[3].push_back({1, 18.5});
     stations[1].push_back({4, 24.8}); stations[4].push_back({1, 24.8});
@@ -66,7 +66,7 @@ vector<vector<Parint>> strDist()
     stations[1].push_back({13, 27.6}); stations[13].push_back({1, 27.6});
     stations[1].push_back({14, 29.8}); stations[14].push_back({1, 29.8});
 
-    // Adicionando as distâncias para as estações E2
+    // distâncias para as estações E2
     stations[2].push_back({3, 8.5}); stations[3].push_back({2, 8.5});
     stations[2].push_back({4, 14.8}); stations[4].push_back({2, 14.8});
     stations[2].push_back({5, 26.6}); stations[5].push_back({2, 26.6});
@@ -80,7 +80,7 @@ vector<vector<Parint>> strDist()
     stations[2].push_back({13, 19.1}); stations[13].push_back({2, 19.1});
     stations[2].push_back({14, 21.8}); stations[14].push_back({2, 21.8});
 
-    // Adicionando as distâncias para as estações E3
+    // distâncias para as estações E3
     stations[3].push_back({4, 6.3}); stations[4].push_back({3, 6.3});
     stations[3].push_back({5, 18.2}); stations[5].push_back({3, 18.2});
     stations[3].push_back({6, 20.6}); stations[6].push_back({3, 20.6});
@@ -93,7 +93,7 @@ vector<vector<Parint>> strDist()
     stations[3].push_back({13, 12.1}); stations[13].push_back({3, 12.1});
     stations[3].push_back({14, 16.6}); stations[14].push_back({3, 16.6});
 
-    // Adicionando as distâncias para as estações E4
+    // distâncias para as estações E4
     stations[4].push_back({5, 12.0}); stations[5].push_back({4, 12.0});
     stations[4].push_back({6, 14.4}); stations[6].push_back({4, 14.4});
     stations[4].push_back({7, 11.5}); stations[7].push_back({4, 11.5});
@@ -105,7 +105,7 @@ vector<vector<Parint>> strDist()
     stations[4].push_back({13, 10.6}); stations[13].push_back({4, 10.6});
     stations[4].push_back({14, 15.4}); stations[14].push_back({4, 15.4});
 
-    // Adicionando as distâncias para as estações E5
+    // distâncias para as estações E5
     stations[5].push_back({6, 3.0}); stations[6].push_back({5, 3.0});
     stations[5].push_back({7, 2.4}); stations[7].push_back({5, 2.4});
     stations[5].push_back({8, 19.4}); stations[8].push_back({5, 19.4});
@@ -116,7 +116,7 @@ vector<vector<Parint>> strDist()
     stations[5].push_back({13, 14.5}); stations[13].push_back({5, 14.5});
     stations[5].push_back({14, 17.9}); stations[14].push_back({5, 17.9});
 
-    // Adicionando as distâncias para as estações E6
+    // distâncias para as estações E6
     stations[6].push_back({7, 3.3}); stations[7].push_back({6, 3.3});
     stations[6].push_back({8, 22.3}); stations[8].push_back({6, 22.3});
     stations[6].push_back({9, 25.7}); stations[9].push_back({6, 25.7});
@@ -126,7 +126,7 @@ vector<vector<Parint>> strDist()
     stations[6].push_back({13, 15.2}); stations[13].push_back({6, 15.2});
     stations[6].push_back({14, 18.2}); stations[14].push_back({6, 18.2});
 
-    // Adicionando as distâncias para as estações E7
+    // distâncias para as estações E7
     stations[7].push_back({8, 20.0}); stations[8].push_back({7, 20.0});
     stations[7].push_back({9, 23.0}); stations[9].push_back({7, 23.0});
     stations[7].push_back({10, 27.3}); stations[10].push_back({7, 27.3});
@@ -135,7 +135,7 @@ vector<vector<Parint>> strDist()
     stations[7].push_back({13, 12.4}); stations[13].push_back({7, 12.4});
     stations[7].push_back({14, 15.6}); stations[14].push_back({7, 15.6});
 
-    // Adicionando as distâncias para as estações E8
+    // distâncias para as estações E8
     stations[8].push_back({9, 8.2}); stations[9].push_back({8, 8.2});
     stations[8].push_back({10, 20.3}); stations[10].push_back({8, 20.3});
     stations[8].push_back({11, 16.1}); stations[11].push_back({8, 16.1});
@@ -143,14 +143,14 @@ vector<vector<Parint>> strDist()
     stations[8].push_back({13, 22.7}); stations[13].push_back({8, 22.7});
     stations[8].push_back({14, 27.6}); stations[14].push_back({8, 27.6});
 
-    // Adicionando as distâncias para as estações E9
+    // distâncias para as estações E9
     stations[9].push_back({10, 13.5}); stations[10].push_back({9, 13.5});
     stations[9].push_back({11, 11.2}); stations[11].push_back({9, 11.2});
     stations[9].push_back({12, 10.9}); stations[12].push_back({9, 10.9});
     stations[9].push_back({13, 21.2}); stations[13].push_back({9, 21.2});
     stations[9].push_back({14, 26.6}); stations[14].push_back({9, 26.6});
 
-    // Adicionando as distâncias para as estações E10
+    // distâncias para as estações E10
     stations[10].push_back({11, 17.6}); stations[11].push_back({10, 17.6});
     stations[10].push_back({12, 24.2}); stations[12].push_back({10, 24.2});
     stations[10].push_back({13, 18.7}); stations[13].push_back({10, 18.7});
@@ -198,20 +198,78 @@ float calc_dist_ret(vector<vector<Parint>> stations, int origin, int dest) {
     return distancia;
 }
 
-float heuristic(vector<vector<Parint>> realDist, vector<vector<Parint>> stations, int origin,int nextDest, int dest){
-    float g_dist = calc_dist_metro(realDist,origin,nextDest);
+float heuristic(vector<vector<Parint>> subway, vector<vector<Parint>> stations, int origin,int nextDest, int dest){
+    float g_dist = calc_dist_metro(subway,origin,nextDest);
     float g_tempo = g_dist * 2;
     float h_dist = calc_dist_ret(stations, nextDest, dest);
     float h_tempo = h_dist * 2;
     return g_tempo + h_tempo;
 }
 
+void astar(vector<Parint> frontier, vector<vector<Parint>> realStations, vector<vector<Parint>> stations, int origin, int dest){
+    int nextDest = 0;
 
+    if (frontier[0].first == dest) {
+        cout << "Chegou no destino!" << endl;
+        // imprime a fronteira final
+        cout << "fronteira final: ";
+        for (auto it = frontier.begin(); it != frontier.end(); it++) {
+            cout << it->first << " " << it->second << ", ";
+        }
+        return;
+    }
+
+    // Pega o primeiro da fronteira
+    int stationStart = frontier[0].first;
+    float heuristicValue = frontier[0].second;
+
+    // imprime a fronteira
+    cout << "fronteira antes: ";
+    for (auto it = frontier.begin(); it != frontier.end(); it++) {
+        cout << it->first << " " << it->second << ", ";
+    }  
+
+    for (auto it = realStations[stationStart].begin(); it != realStations[stationStart].end(); it++) {
+        nextDest = it->first;
+        float newHeuristic = heuristic(realStations, stations, stationStart, nextDest, dest);
+        frontier.push_back({nextDest, newHeuristic});
+    }
+    // cout << endl;
+    // cout << "fronteira depois: ";
+    // // imprime a fronteira
+    // for (auto it = frontier.begin(); it != frontier.end(); it++) {
+    //     cout << it->first << " " << it->second << ", ";
+    // }
+
+    // ordena a fronteira de acordo com a heurística
+    sort(frontier.begin(), frontier.end(), [](const Parint& a, const Parint& b) {
+        return a.second < b.second;
+    });
+    cout << endl;
+
+    frontier.erase(frontier.begin());
+
+    // imprime a nova fronteira
+    cout << "fronteira nova: ";
+    for (auto it = frontier.begin(); it != frontier.end(); it++) {
+        cout << it->first << " " << it->second << ", ";
+    }
+
+    // Chama recursão para próximo elemento da fronteira
+    //cout << frontier[0].first << endl;
+    astar(frontier, realStations, stations, frontier[0].first, dest); // faltando condição de parada da recursão? caso base?
+
+}
 
 int main() {
-vector<vector<Parint>> realStations = realDist();
-vector<vector<Parint>> stations = strDist();
-cout << heuristic(realStations, stations, 4, 5, 7) << endl;
-
-return 0;
+    vector<Parint> frontier;
+    vector<vector<Parint>> realStations = subway();
+    vector<vector<Parint>> stations = strDist();
+    //cout << heuristic(realStations, stations, 4, 5, 7) << endl;
+    int origin = 4;
+    int dest = 7;
+    // Calcula primeira fronteira
+    frontier.push_back({ origin, 0 });
+    astar(frontier, realStations, stations, origin, dest);
+    return 0;
 }
