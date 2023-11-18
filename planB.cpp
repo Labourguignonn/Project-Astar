@@ -9,41 +9,60 @@ vector<pstr> subway() {
   vector<pstr> realStations(15); 
   // realStation[start].push_back({{destine, cost}, color})
 
-  //string color;
-  // E1 -> E2
+  // Conexões Azuis
   realStations[1].push_back({{2, 10.0}, "Azul"});
+  realStations[2].push_back({{1, 10.0}, "Azul"});
 
-  // E2 -> E3, E9, E10
   realStations[2].push_back({{3, 8.5}, "Azul"});
-  realStations[2].push_back({{9, 10.0}, "Amarela"});
-  realStations[2].push_back({{10, 3.5}, "Amarela"});
+  realStations[3].push_back({{2, 8.5}, "Azul"});
 
-  // E3 -> E4, E9, E13
   realStations[3].push_back({{4, 6.3}, "Azul"});
-  realStations[3].push_back({{9, 9.4}, "Vermelha"});
-  realStations[3].push_back({{13, 18.7}, "Vermelha"});
-
-  // E4 -> E3, E5, E8, E13
   realStations[4].push_back({{3, 6.3}, "Azul"});
+
   realStations[4].push_back({{5, 13.0}, "Azul"});
-  realStations[4].push_back({{8, 15.4}, "Verde"});
-  realStations[4].push_back({{13, 12.8}, "Verde"});
+  realStations[5].push_back({{4, 13.0}, "Azul"});
 
-  // E5 -> E6, E7, E8
   realStations[5].push_back({{6, 3.0}, "Azul"});
+  realStations[6].push_back({{5, 3.0}, "Azul"});
+
+  // Conexões Amarelas
+  realStations[2].push_back({{9, 10.0}, "Amarela"});
+  realStations[9].push_back({{2, 10.0}, "Amarela"});
+
+  realStations[2].push_back({{10, 3.5}, "Amarela"});
+  realStations[10].push_back({{2, 3.5}, "Amarela"});
+
   realStations[5].push_back({{7, 2.4}, "Amarela"});
+  realStations[7].push_back({{5, 2.4}, "Amarela"});
+
   realStations[5].push_back({{8, 30.0}, "Amarela"});
+  realStations[8].push_back({{5, 30.0}, "Amarela"});
 
-  // E8 -> E9, E12
   realStations[8].push_back({{9, 9.6}, "Amarela"});
+  realStations[9].push_back({{8, 9.6}, "Amarela"});
+
+  // Conexões Verdes
+  realStations[4].push_back({{8, 15.4}, "Verde"});
+  realStations[8].push_back({{4, 15.4}, "Verde"});
+
+  realStations[4].push_back({{13, 12.8}, "Verde"});
+  realStations[13].push_back({{4, 12.8}, "Verde"});
+
   realStations[8].push_back({{12, 6.4}, "Verde"});
+  realStations[12].push_back({{8, 6.4}, "Verde"});
 
-  // E9 -> E11
-  realStations[9].push_back({{11, 12.2}, "Vermelha"});
-
-  // E13 -> E14
   realStations[13].push_back({{14, 5.1}, "Verde"});
+  realStations[14].push_back({{13, 5.1}, "Verde"});
 
+  // Conexões Vermelhas
+  realStations[3].push_back({{9, 9.4}, "Vermelha"});
+  realStations[9].push_back({{3, 9.4}, "Vermelha"});
+
+  realStations[9].push_back({{11, 12.2}, "Vermelha"});
+  realStations[11].push_back({{9, 12.2}, "Vermelha"});
+
+  realStations[3].push_back({{13, 18.7}, "Vermelha"});
+  realStations[13].push_back({{3, 18.7}, "Vermelha"});
 
   return realStations;
 } // E6, E7, E10, E11, E12 não chegam a lugar nenhum! -> evitar, apesar da heurística ser menor (a não ser que seja o destino - if !tiverCaminho(bool) and x != destino {continue} ?)
