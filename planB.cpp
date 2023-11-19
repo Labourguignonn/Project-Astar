@@ -199,11 +199,11 @@ vector<vector<Parint>> strDist()
 }
 
 
-float calc_dist_metro(vector<vector<Parint>> realStations, int start, int nextDest) {
+float calc_dist_metro(vector<pstr> realStations, int start, int nextDest) {
     float distancia = 0.0;
     for (auto it = realStations[start].begin(); it != realStations[start].end(); it++) {
-        if (it->first == nextDest) {
-            distancia = it->second;
+        if (it->first.first == nextDest) {
+            distancia = it->first.second;
             break;
         }
     }
@@ -221,7 +221,7 @@ float calc_dist_ret(vector<vector<Parint>> stations, int origin, int dest) {
     return distancia;
 }
 
-float heuristic(vector<vector<Parint>> subway, vector<vector<Parint>> stations, int origin,int nextDest, int dest){
+float heuristic(vector<pstr> subway, vector<vector<Parint>> stations, int origin,int nextDest, int dest){
     float g_dist = calc_dist_metro(subway,origin,nextDest);
     float g_tempo = g_dist * 2;
     float h_dist = calc_dist_ret(stations, nextDest, dest);
@@ -229,7 +229,7 @@ float heuristic(vector<vector<Parint>> subway, vector<vector<Parint>> stations, 
     return g_tempo + h_tempo;
 }
 
-void astar(vector<Parint> frontier, vector<vector<Parint>> realStations, vector<vector<Parint>> stations, int origin, int dest){
+void astar(vector<Parint> frontier, vector<pstr> realStations, vector<vector<Parint>> stations, int origin, int dest){
     // imprime a fronteira
     cout << "fronteira: ";
     for (auto it = frontier.begin(); it != frontier.end(); it++) {
@@ -247,7 +247,7 @@ void astar(vector<Parint> frontier, vector<vector<Parint>> realStations, vector<
     float heuristicValue = frontier[0].second;
 
     for (auto it = realStations[stationStart].begin(); it != realStations[stationStart].end(); it++) {
-        nextDest = it->first;
+        nextDest = it->first.first;
         float newHeuristic = heuristic(realStations, stations, stationStart, nextDest, dest);
         // Verifica se já não está na fronteira, se estiver não adiciona
         int achou = 0;
@@ -278,11 +278,11 @@ void astar(vector<Parint> frontier, vector<vector<Parint>> realStations, vector<
 
 int main() {
     vector<Parint> frontier;
-    vector<vector<Parint>> realStations = subway();
+    vector<pstr> realStations = subway();
     vector<vector<Parint>> stations = strDist();
     //cout << heuristic(realStations, stations, 4, 5, 7) << endl;
-    int origin = 4;
-    int dest = 7;
+    int origin = 7;
+    int dest = 8;
     // Calcula primeira fronteira
     frontier.push_back({ origin, 0 });
     astar(frontier, realStations, stations, origin, dest);
