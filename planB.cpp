@@ -229,7 +229,7 @@ float heuristic(vector<pstr> subway, vector<vector<Parint>> stations, int origin
     return g_tempo + h_tempo;
 }
 
-void astar(vector<Parint> frontier, vector<pstr> realStations, vector<vector<Parint>> stations, int origin, int dest){
+void astar(vector<Parint> frontier, vector<pstr> realStations, vector<vector<Parint>> stations, int startPoint, int lastPoint, int origin, int dest){
     // imprime a fronteira
     cout << "fronteira: ";
     for (auto it = frontier.begin(); it != frontier.end(); it++) {
@@ -260,10 +260,11 @@ void astar(vector<Parint> frontier, vector<pstr> realStations, vector<vector<Par
                 break;
             }
         }
-        if (!achou) {
+        if (!achou && nextDest != lastPoint && nextDest != startPoint) {
             frontier.push_back({nextDest, newHeuristic});
         }
     }
+    lastPoint = frontier[0].first;
     frontier.erase(frontier.begin());
     // ordena a fronteira de acordo com a heurística
     sort(frontier.begin(), frontier.end(), [](const Parint& a, const Parint& b) {
@@ -272,7 +273,7 @@ void astar(vector<Parint> frontier, vector<pstr> realStations, vector<vector<Par
     cout << endl;
 
     // Chama recursão para próximo elemento da fronteira
-    astar(frontier, realStations, stations, frontier[0].first, dest);
+    astar(frontier, realStations, stations, startPoint, lastPoint, frontier[0].first, dest);
     return;
 }
 
@@ -281,10 +282,10 @@ int main() {
     vector<pstr> realStations = subway();
     vector<vector<Parint>> stations = strDist();
     //cout << heuristic(realStations, stations, 4, 5, 7) << endl;
-    int origin = 7;
-    int dest = 8;
+    int origin = 9;
+    int dest = 5;
     // Calcula primeira fronteira
     frontier.push_back({ origin, 0 });
-    astar(frontier, realStations, stations, origin, dest);
+    astar(frontier, realStations, stations, origin, origin, origin, dest);
     return 0;
 }
