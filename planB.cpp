@@ -3,12 +3,11 @@ using namespace std;
 
 typedef pair<int,float> Parint;
 typedef vector<pair<Parint, string>> pstr;
+typedef pair<Parint, string> pstrfront;
 
-// cria o grafo do mapa do metrô
+// Cria o grafo do mapa do metrô
 vector<pstr> subway() {
   vector<pstr> realStations(15); 
-  // realStation[start].push_back({{destine, cost}, color})
-
   // Conexões Azuis
   realStations[1].push_back({{2, 10.0}, "Azul"});
   realStations[2].push_back({{1, 10.0}, "Azul"});
@@ -65,15 +64,14 @@ vector<pstr> subway() {
   realStations[13].push_back({{3, 18.7}, "Vermelha"});
 
   return realStations;
-} // E6, E7, E10, E11, E12 não chegam a lugar nenhum! -> evitar, apesar da heurística ser menor (a não ser que seja o destino - if !tiverCaminho(bool) and x != destino {continue} ?)
+} 
 
 
 
-// criar lista de adj com distâncias diretas entre as estações -> só vai pra frente
+// Criar lista de adj com distâncias diretas entre as estações -> só vai pra frente
 vector<vector<Parint>> strDist() 
 {
-    vector<vector<Parint>> stations(15); // setando com um tamanho a mais para dar match com o número das estações (inciando do 1)
-    // stations[origem].push_back({destino, custo});
+    vector<vector<Parint>> stations(15); // Definido um tamanho maior para ficar com número das estações
 
     stations[1].push_back({2, 10.0}); stations[2].push_back({1, 10.0});
     stations[1].push_back({3, 18.5}); stations[3].push_back({1, 18.5});
@@ -212,7 +210,7 @@ float calc_dist_metro(vector<pstr> realStations, int start, int nextDest) {
 
 float calc_dist_ret(vector<vector<Parint>> stations, int origin, int dest) {
     float distancia = 0.0;
-    for (int i = 0; i < stations[origin].size(); i++) {
+    for (long unsigned int i = 0; i < stations[origin].size(); i++) {
         if (stations[origin][i].first == dest) {
             distancia = stations[origin][i].second;
             break;
@@ -229,63 +227,118 @@ float heuristic(vector<pstr> subway, vector<vector<Parint>> stations, int origin
     return g_tempo + h_tempo;
 }
 
-void astar(vector<Parint> frontier, vector<pstr> realStations, vector<vector<Parint>> stations, int startPoint, int lastPoint, int origin, int dest){
-    // imprime a fronteira
-    cout << "fronteira: ";
-    for (auto it = frontier.begin(); it != frontier.end(); it++) {
-        cout << "[" << it->first << "," << it->second << "], ";
-    }
+float realTime(vector<pstr> subway,int origin,int nextDest){
+    float g_dist = calc_dist_metro(subway,origin,nextDest);
+    float g_tempo = g_dist * 2;
+    return g_tempo;
+}
 
-    if (frontier[0].first == dest) {
+void astar(vector<pstrfront> frontier, vector<pstr> realStations, vector<vector<Parint>> stations, int startPoint, int origin, int dest, vector<int> path, float realtime){
+    // imprime a fronteira
+    int lastPoint = origin;
+    cout << "Fronteira: ";
+    for (auto it = frontier.begin(); it != frontier.end(); it++) {
+        cout << "[" << it->first.first << "," << it->first.second << "]";
+        if (it != frontier.end() - 1) {
+            cout << ", ";    
+        }
+    }
+    cout << endl;
+
+    if (frontier[0].first.first == dest) {
         cout << endl << "Chegou no destino!" << endl;
+        path.push_back(dest);
+        //Imprime o caminho
+        cout << "Melhor caminho até a estação: ";
+        for (auto it = path.begin(); it != path.end(); it++) {
+            cout << *it;
+            if (it != path.end() - 1) {
+                cout << " -> ";
+            }
+        }
+        cout << endl << "Tempo total: " << realtime << " minutos" << endl;
         return;
     }
 
     // Pega o primeiro da fronteira
     int nextDest = 0;
-    int stationStart = frontier[0].first;
-    float heuristicValue = frontier[0].second;
+    int stationStart = frontier[0].first.first;
+    long unsigned int sizeFrontier = frontier.size();
 
     for (auto it = realStations[stationStart].begin(); it != realStations[stationStart].end(); it++) {
         nextDest = it->first.first;
         float newHeuristic = heuristic(realStations, stations, stationStart, nextDest, dest);
+        // Adiciona tempo de baldeação se houver
+        if (it->second != frontier[0].second) {
+            newHeuristic += 4;
+        }
         // Verifica se já não está na fronteira, se estiver não adiciona
         int achou = 0;
         for (auto it2 = frontier.begin(); it2 != frontier.end(); it2++) {
-            if (it2->first == nextDest) {
+            if (it2->first.first == nextDest) {
                 ++achou;
-                if (it2->second > newHeuristic) {
-                    it2->second = newHeuristic;
+                if (it2->first.second > newHeuristic) {
+                    it2->first.second = newHeuristic;
                 }
                 break;
             }
         }
         if (!achou && nextDest != lastPoint && nextDest != startPoint) {
-            frontier.push_back({nextDest, newHeuristic});
+            frontier.push_back({{nextDest, newHeuristic}, it->second});
         }
     }
-    lastPoint = frontier[0].first;
+    lastPoint = frontier[0].first.first;
+    string tempColor = frontier[0].second;
+    // Remove o nó visitado
     frontier.erase(frontier.begin());
-    // ordena a fronteira de acordo com a heurística
-    sort(frontier.begin(), frontier.end(), [](const Parint& a, const Parint& b) {
-        return a.second < b.second;
-    });
-    cout << endl;
 
+    // Adiciona o nó no caminho
+    if (frontier.size()>=sizeFrontier){
+        path.push_back(lastPoint);
+    }    
+    // ordena a fronteira de acordo com a heurística
+    sort(frontier.begin(), frontier.end(), [](const pstrfront& a, const pstrfront& b) {
+        return a.first.second < b.first.second;
+    });
+    
+    realtime += realTime(realStations, lastPoint, frontier[0].first.first);
+    if (tempColor != frontier[0].second) {
+        realtime += 4;
+    }
     // Chama recursão para próximo elemento da fronteira
-    astar(frontier, realStations, stations, startPoint, lastPoint, frontier[0].first, dest);
+    astar(frontier, realStations, stations, startPoint, lastPoint, dest, path, realtime);
     return;
 }
 
 int main() {
-    vector<Parint> frontier;
+    vector<int> path;
+    vector<pstrfront> frontier;
     vector<pstr> realStations = subway();
     vector<vector<Parint>> stations = strDist();
     //cout << heuristic(realStations, stations, 4, 5, 7) << endl;
-    int origin = 9;
-    int dest = 5;
+
+    // Recebe de input os valors de entrada origin dest e color
+    int origin, dest;
+    float realtime = 0.0;
+    string color;
+    // cout << "Digite o número da estação de origem (1 a 14): ";
+    // cin >> origin;
+    // cout << "Digite a cor da linha de origem (Azul, Amarela, Verde ou Vermelha): ";
+    // cin >> color;
+    // // Pede a cor até receber uma válida
+    // while (color != "Azul" && color != "Amarela" && color != "Verde" && color != "Vermelha") {
+    //     cout << "Cor inválida! Digite a cor da linha de origem (Azul, Amarela, Verde ou Vermelha): ";
+    //     cin >> color;
+    // }
+    // cout << "Digite o número da estação de destino (1 a 14): ";
+    // cin >> dest;
+
+    origin = 1;
+    dest = 13;
+    color = "Azul";
+
     // Calcula primeira fronteira
-    frontier.push_back({ origin, 0 });
-    astar(frontier, realStations, stations, origin, origin, origin, dest);
+    frontier.push_back({{ origin, 0 }, color});
+    astar(frontier, realStations, stations, origin, origin, dest, path, realtime);
     return 0;
 }
