@@ -321,21 +321,22 @@ int main() {
     int origin, dest;
     float realtime = 0.0;
     string color;
-    // cout << "Digite o número da estação de origem (1 a 14): ";
-    // cin >> origin;
-    // cout << "Digite a cor da linha de origem (Azul, Amarela, Verde ou Vermelha): ";
-    // cin >> color;
-    // // Pede a cor até receber uma válida
-    // while (color != "Azul" && color != "Amarela" && color != "Verde" && color != "Vermelha") {
-    //     cout << "Cor inválida! Digite a cor da linha de origem (Azul, Amarela, Verde ou Vermelha): ";
-    //     cin >> color;
-    // }
-    // cout << "Digite o número da estação de destino (1 a 14): ";
-    // cin >> dest;
 
-    origin = 1;
-    dest = 13;
-    color = "Azul";
+    cout << "Digite o número da estação de origem (1 a 14): ";
+    cin >> origin;
+    cout << "Digite a cor da linha de origem (Azul, Amarela, Verde ou Vermelha): ";
+    cin >> color;
+    // Pede a cor até receber uma válida
+    while (color != "Azul" && color != "Amarela" && color != "Verde" && color != "Vermelha") {
+        cout << "Cor inválida! Digite a cor da linha de origem (Azul, Amarela, Verde ou Vermelha): ";
+        cin >> color;
+    }
+    cout << "Digite o número da estação de destino (1 a 14): ";
+    cin >> dest;
+
+    // origin = 1;
+    // dest = 13;
+    // color = "Azul";
 
     // Calcula primeira fronteira
     frontier.push_back({{ origin, 0 }, color});
